@@ -1,0 +1,44 @@
+/* ============================================
+   sections/contact.css
+   Responsabilité : Formulaire de contact
+   Éléments : .g, .g0, .gf, .gi, .gt
+   ============================================ */
+
+.g {
+  padding: 70px 60px;
+  background: #f9f9f9;
+}
+
+.g0 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a1a2e;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.gf {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gi {
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.gt {
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  height: 140px;
+  resize: vertical;
+  outline: none;
+}

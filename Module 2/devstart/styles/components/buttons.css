@@ -1,0 +1,43 @@
+/* ============================================
+   components/buttons.css
+   Responsabilité : Styles de tous les boutons CTA
+   Utilisé par : hero, about, contact
+   ============================================ */
+
+/* Bouton primaire rouge (CTA principal) */
+.c1c a {
+  background: #e94560;
+  color: white;
+  padding: 14px 32px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Bouton secondaire navy (About) */
+.e2b a {
+  display: inline-block;
+  margin-top: 10px;
+  background: #1a1a2e;
+  color: white;
+  padding: 12px 26px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Bouton formulaire contact */
+.gb {
+  background: #e94560;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.gb:hover {
+  background: #c73652;
+}

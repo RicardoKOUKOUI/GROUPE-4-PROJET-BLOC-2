@@ -12,7 +12,7 @@ L’objectif principal est de **concevoir et implémenter une architecture logic
 
 Contrairement au Module 1, ce projet ne porte pas sur le design ou le contenu, mais sur **l’organisation du code** afin de garantir sa maintenabilité et son évolutivité.
 
----
+
 
 ## 🎯 Objectifs
 
@@ -25,7 +25,7 @@ Contrairement au Module 1, ce projet ne porte pas sur le design ou le contenu, m
   * les responsabilités
 * Préparer le projet à évoluer (Portfolio, Blog, Espace Client)
 
----
+
 
 ## 🧠 Concept clé
 
@@ -39,7 +39,7 @@ Exemples :
 * `footer.css` → gère uniquement le footer
 * `base.css` → styles globaux (polices, couleurs, reset)
 
----
+
 
 ## 🏗️ Structure du projet
 
@@ -68,7 +68,7 @@ devstart/
     └── client.html
 ```
 
----
+
 
 ## ⚙️ Méthodologie
 
@@ -101,7 +101,7 @@ Le projet a été réalisé en 3 phases :
 * Réorganisation des fichiers
 * Vérification du rendu (identique à l’original)
 
----
+
 
 ## 🔄 Gestion Git
 
@@ -114,7 +114,7 @@ Bonnes pratiques :
 * Messages clairs
 * Travail collaboratif
 
----
+
 
 ## 📈 Évolutivité
 
@@ -124,7 +124,7 @@ L’architecture a été conçue pour :
 * Réutiliser les composants existants
 * Maintenir un code lisible et organisé
 
----
+
 
 ## ⚠️ Contraintes respectées
 
@@ -133,17 +133,21 @@ L’architecture a été conçue pour :
 * ✅ Justification de chaque choix
 * ✅ Structure claire et compréhensible
 
----
+
 
 ## 👥 Équipe
 
 * Ricardo Koukoui
+* SIKIROU kounouz
+* GBESSEMEHLAN Sènami Léoncelle
+* Charbelle Enam MEVO
+* DJEHONNON  Jésugnon Geoffroy
 
 
 
 ## 📅 Durée
 
-Projet réalisé sur **1 semaine**
+Projet réalisé sur **5 jours **
 
 
 
@@ -157,7 +161,5 @@ Une bonne architecture permet de :
 * faciliter le travail en équipe
 * rendre le projet évolutif
 
----
 
-💡 *Un bon développeur ne se contente pas de coder… il conçoit.*
 

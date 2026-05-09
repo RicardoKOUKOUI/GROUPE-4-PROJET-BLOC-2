@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Phase 2 — Architecture logicielle DevStart</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --dark: #0f0f1a;
+    --navy: #1a1a2e;
+    --red: #e94560;
+    --border: #2a2a3e;
+    --tag-bg: #1e1e32;
+    --grey: #888;
+    --white: #fff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 48px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .doc-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+    margin-bottom: 44px;
+  }
+  .doc-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .doc-title { font-size: 32px; font-weight: 700; line-height: 1.2; }
+  .doc-title span { color: var(--red); }
+  .doc-sub { margin-top: 8px; font-size: 14px; color: var(--grey); font-weight: 300; }
+
+  .part-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    margin-top: 44px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .part-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── FOLDER TREE ── */
+  .tree {
+    background: #0a0a14;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+  }
+  .tree-line { display: flex; align-items: center; gap: 0; }
+  .tree-indent { color: #333; user-select: none; }
+  .tree-folder { color: #fcd34d; font-weight: 600; }
+  .tree-file   { color: #ccc; }
+  .tree-file.base    { color: var(--red); }
+  .tree-file.header  { color: #60a5fa; }
+  .tree-file.hero    { color: #4ade80; }
+  .tree-file.services{ color: #f9a8d4; }
+  .tree-file.about   { color: #fcd34d; }
+  .tree-file.testimonials { color: #a5b4fc; }
+  .tree-file.contact { color: #fca5a5; }
+  .tree-file.footer  { color: #c4b5fd; }
+  .tree-file.buttons { color: #fb923c; }
+  .tree-file.cards   { color: #fb923c; }
+  .tree-file.html    { color: #38bdf8; }
+  .tree-file.readme  { color: #86efac; }
+  .tree-comment {
+    margin-left: 16px;
+    color: #444;
+    font-size: 11px;
+  }
+
+  /* ── TABLE ── */
+  .arch-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .arch-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--grey);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--navy);
+  }
+  .arch-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: #ccc;
+    line-height: 1.6;
+  }
+  .arch-table tr:hover td { background: #16162a; }
+  .arch-table tr:last-child td { border-bottom: none; }
+
+  .fname {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .fname.base        { color: var(--red); }
+  .fname.header      { color: #60a5fa; }
+  .fname.hero        { color: #4ade80; }
+  .fname.services    { color: #f9a8d4; }
+  .fname.about       { color: #fcd34d; }
+  .fname.testimonials{ color: #a5b4fc; }
+  .fname.contact     { color: #fca5a5; }
+  .fname.footer      { color: #c4b5fd; }
+  .fname.buttons     { color: #fb923c; }
+  .fname.cards       { color: #fb923c; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .tag.global    { background: #2a1e2e; color: var(--red); }
+  .tag.section   { background: #1e2a3a; color: #93c5fd; }
+  .tag.component { background: #2a1e1a; color: #fb923c; }
+
+  .justify-box {
+    background: #0f1220;
+    border-left: 3px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.6;
+    margin-top: 6px;
+    font-style: italic;
+  }
+  .justify-box strong { color: #aaa; font-style: normal; }
+
+  /* ── EVOLUTION ── */
+  .evo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .evo-card {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .evo-card .evo-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .evo-card .evo-tree {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #888;
+    line-height: 2;
+  }
+  .evo-card .evo-tree .new { color: #4ade80; }
+  .evo-card .evo-tree .shared { color: #fb923c; }
+  .evo-card .evo-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+
+  /* ── PRINCIPE CARD ── */
+  .principle {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .principle .p-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--red);
+    opacity: 0.4;
+    min-width: 32px;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .principle .p-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .principle .p-desc  { font-size: 13px; color: #888; line-height: 1.6; }
+
+  .summary-box {
+    background: #0f1a0f;
+    border: 1px solid #1e3a1e;
+    border-left: 3px solid #4ade80;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 44px;
+  }
+  .summary-box .sb-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4ade80;
+    margin-bottom: 10px;
+  }
+  .summary-box p {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.8;
+  }
+  .summary-box strong { color: white; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-label">Bloc 2 · Module 2 — Phase 2</div>
+  <div class="doc-title">Architecture <span>modulaire</span> DevStart Agency</div>
+  <div class="doc-sub">Structure de dossiers cible · Tableau des fichiers · Stratégie d'évolution · IFRI L1</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     1. PRINCIPES DIRECTEURS
+══════════════════════════════════════════ -->
+<div class="part-title">01 — Principes directeurs de l'architecture</div>
+
+<div class="principle">
+  <div class="p-num">01</div>
+  <div>
+    <div class="p-title">Une responsabilité par fichier</div>
+    <div class="p-desc">Chaque fichier CSS ne gère qu'une seule section ou un seul type de composant. Si on doit expliquer ce que fait un fichier et que la réponse contient le mot "et", c'est qu'il fait trop de choses.</div>
+  </div>
+</div>
+<div class="principle">
+  <div class="p-num">02</div>
+  <div>
+    <div class="p-title">Séparation global / local</div>
+    <div class="p-desc">Les styles qui s'appliquent à tout le site (reset, couleurs, typographie) vivent dans <code>base.css</code>. Les styles d'une section ne sortent jamais de leur fichier dédié.</div>
+  </div>
+</div>
+<div class="principle">
+  <div class="p-num">03</div>
+  <div>
+    <div class="p-title">Composants réutilisables isolés</div>
+    <div class="p-desc">Les éléments qui apparaissent dans plusieurs sections (boutons, cartes) ont leur propre fichier dans <code>styles/components/</code>. On modifie un bouton à un seul endroit, le changement se répercute partout.</div>
+  </div>
+</div>
+<div class="principle">
+  <div class="p-num">04</div>
+  <div>
+    <div class="p-title">Pensée à long terme</div>
+    <div class="p-desc">La structure anticipe l'arrivée de nouvelles pages (Portfolio, Blog, Espace Client). Chaque nouvelle page crée son propre sous-dossier et réutilise les composants existants sans toucher aux fichiers actuels.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     2. STRUCTURE DE DOSSIERS CIBLE
+══════════════════════════════════════════ -->
+<div class="part-title">02 — Structure de dossiers cible</div>
+
+<div class="tree">
+  <div class="tree-line"><span class="tree-folder">devstart/</span></div>
+  <div class="tree-line"><span class="tree-indent">│</span></div>
+  <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-file html">index.html</span><span class="tree-comment">← page d'accueil (inchangée visuellement)</span></div>
+  <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-file readme">README.md</span><span class="tree-comment">← documentation de la structure</span></div>
+  <div class="tree-line"><span class="tree-indent">│</span></div>
+  <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-folder">assets/</span><span class="tree-comment">← images et ressources statiques</span></div>
+  <div class="tree-line"><span class="tree-indent">│   ├── </span><span class="tree-file">hero.png</span></div>
+  <div class="tree-line"><span class="tree-indent">│   └── </span><span class="tree-file">team.png</span></div>
+  <div class="tree-line"><span class="tree-indent">│</span></div>
+  <div class="tree-line"><span class="tree-indent">└── </span><span class="tree-folder">styles/</span><span class="tree-comment">← tout le CSS, organisé par responsabilité</span></div>
+  <div class="tree-line"><span class="tree-indent">    │</span></div>
+  <div class="tree-line"><span class="tree-indent">    ├── </span><span class="tree-file base">base.css</span><span class="tree-comment">← reset + couleurs + typographie globale</span></div>
+  <div class="tree-line"><span class="tree-indent">    │</span></div>
+  <div class="tree-line"><span class="tree-indent">    ├── </span><span class="tree-folder">sections/</span><span class="tree-comment">← 1 fichier = 1 section de la page</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   ├── </span><span class="tree-file header">header.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   ├── </span><span class="tree-file hero">hero.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   ├── </span><span class="tree-file services">services.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   ├── </span><span class="tree-file about">about.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   ├── </span><span class="tree-file testimonials">testimonials.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   ├── </span><span class="tree-file contact">contact.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │   └── </span><span class="tree-file footer">footer.css</span></div>
+  <div class="tree-line"><span class="tree-indent">    │</span></div>
+  <div class="tree-line"><span class="tree-indent">    └── </span><span class="tree-folder">components/</span><span class="tree-comment">← éléments réutilisables entre sections</span></div>
+  <div class="tree-line"><span class="tree-indent">        ├── </span><span class="tree-file buttons">buttons.css</span><span class="tree-comment">← tous les boutons CTA du site</span></div>
+  <div class="tree-line"><span class="tree-indent">        └── </span><span class="tree-file cards">cards.css</span><span class="tree-comment">← cartes services + cartes témoignages</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     3. TABLEAU DES FICHIERS
+══════════════════════════════════════════ -->
+<div class="part-title">03 — Tableau des fichiers CSS</div>
+
+<table class="arch-table">
+  <thead>
+    <tr>
+      <th>Fichier</th>
+      <th>Type</th>
+      <th>Responsabilité unique</th>
+      <th>Éléments gérés + Justification</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td><span class="fname base">base.css</span></td>
+      <td><span class="tag global">Global</span></td>
+      <td>Fondations visuelles communes à toutes les pages du site</td>
+      <td>
+        Reset universel (<code>* margin/padding: 0</code>), police globale (Arial), couleur de texte par défaut (#333)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Ces règles s'appliquent partout. Les centraliser évite de les répéter dans chaque fichier. Si on change la police demain, on touche à un seul endroit.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname header">header.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page et style de la barre de navigation</td>
+      <td>
+        <code>.b1</code> (barre nav), <code>.b1a</code> (logo), <code>.b1b a</code> (liens nav + hover)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Le header est présent sur toutes les futures pages. L'isoler permet de le modifier ou de le rendre sticky sans risquer de casser les autres sections.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname hero">hero.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page de la section d'accroche principale</td>
+      <td>
+        <code>.c</code> (layout flex), <code>.c1 / .c1a / .c1b</code> (textes), <code>.c1c a</code> (bouton CTA), <code>.c2 img</code> (image)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Le hero est spécifique à la page d'accueil. Les pages Portfolio ou Blog auront leur propre hero différent — ce fichier ne concerne que celui-ci.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname services">services.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page de la section "Ce qu'on fait"</td>
+      <td>
+        <code>.d</code> (section wrapper), <code>.d0</code> (titre), <code>.dd</code> (grille flex), <code>.d1–.d4</code> (positionnement des cartes), <code>.d1i–.d4i / .d1t–.d4t / .d1p–.d4p</code> (contenu cartes)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Ce fichier gère le <em>layout</em> et le <em>contenu</em> des cartes services. Les styles visuels des cartes (fond, border-radius) iront dans cards.css pour être réutilisés.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname about">about.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page de la section "À propos"</td>
+      <td>
+        <code>.e</code> (layout flex 2 col), <code>.e1 / .eimg</code> (photo équipe), <code>.e2 / .e2t / .e2p / .e2b a</code> (texte + bouton)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Cette section a une structure unique (image gauche + texte droite) qui ne se retrouve nulle part ailleurs. Elle mérite son propre fichier pour être modifiée indépendamment.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname testimonials">testimonials.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page de la section témoignages clients</td>
+      <td>
+        <code>.f</code> (section fond sombre), <code>.f0</code> (titre blanc), <code>.ff</code> (grille flex), <code>.f1–.f3</code> (positionnement), <code>.f1t–.f3t / .f1n–.f3n</code> (texte + auteur)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> La section témoignages a un fond sombre spécifique (#1a1a2e) qui la distingue visuellement. L'isoler permet de changer tout ce thème sombre en un seul fichier.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname contact">contact.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page et style du formulaire de contact</td>
+      <td>
+        <code>.g / .g0 / .gf</code> (section + titre + formulaire), <code>.gi</code> (inputs), <code>.gt</code> (textarea), <code>.gb</code> (bouton envoi + hover)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Les styles de formulaire (inputs, textarea) sont spécifiques à cette section. Si demain on ajoute un formulaire sur la page Blog, il aura ses propres styles sans interférer.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname footer">footer.css</span></td>
+      <td><span class="tag section">Section</span></td>
+      <td>Mise en page du pied de page</td>
+      <td>
+        <code>.h</code> (barre footer flex), <code>.h1</code> (copyright), <code>.h2 a / :hover</code> (liens sociaux), <code>.h3</code> (email)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Comme le header, le footer est partagé entre toutes les pages. L'isoler permet de le mettre à jour globalement sans risquer de toucher à d'autres styles.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname buttons">buttons.css</span></td>
+      <td><span class="tag component">Composant</span></td>
+      <td>Styles de tous les boutons CTA du site</td>
+      <td>
+        Bouton rouge primaire (<code>.c1c a</code>, <code>.gb</code>), bouton navy secondaire (<code>.e2b a</code>), états hover
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Le site a 3 boutons avec des styles quasi-identiques éparpillés dans 3 fichiers différents. Les regrouper ici signifie qu'on change la couleur des boutons à <em>un seul endroit</em>.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span class="fname cards">cards.css</span></td>
+      <td><span class="tag component">Composant</span></td>
+      <td>Styles visuels des cartes réutilisables</td>
+      <td>
+        Style de base des cartes services (<code>.d1–.d4</code> : fond, padding, border-radius), style des cartes témoignages (<code>.f1–.f3</code> : fond sombre, border-left accent)
+        <div class="justify-box">
+          <strong>Pourquoi :</strong> Les cartes services et témoignages partagent le même pattern visuel (flex:1, padding, border-radius). La page Portfolio en aura aussi — elle importera ce fichier directement.
+        </div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+<!-- ══════════════════════════════════════════
+     4. STRATÉGIE D'ÉVOLUTION
+══════════════════════════════════════════ -->
+<div class="part-title">04 — Stratégie d'évolution : les futures pages</div>
+
+<div class="evo-grid">
+
+  <div class="evo-card">
+    <div class="evo-title">📁 Page Portfolio</div>
+    <div class="evo-tree">
+devstart/
+├── portfolio.html
+└── styles/
+    ├── <span class="shared">base.css ← réutilisé</span>
+    ├── sections/
+    │   └── <span class="new">portfolio-hero.css ← nouveau</span>
+    │   └── <span class="new">portfolio-grid.css ← nouveau</span>
+    └── components/
+        └── <span class="shared">cards.css ← réutilisé</span>
+    </div>
+    <div class="evo-note">La grille de projets réutilise cards.css. Seuls 2 nouveaux fichiers à créer.</div>
+  </div>
+
+  <div class="evo-card">
+    <div class="evo-title">📁 Page Blog</div>
+    <div class="evo-tree">
+devstart/
+├── blog.html
+└── styles/
+    ├── <span class="shared">base.css ← réutilisé</span>
+    ├── sections/
+    │   └── <span class="new">blog-list.css ← nouveau</span>
+    │   └── <span class="new">blog-article.css ← nouveau</span>
+    └── components/
+        └── <span class="shared">cards.css ← réutilisé</span>
+        └── <span class="shared">buttons.css ← réutilisé</span>
+    </div>
+    <div class="evo-note">Les articles de blog sont des cartes — cards.css est directement réutilisable.</div>
+  </div>
+
+  <div class="evo-card">
+    <div class="evo-title">📁 Espace Client</div>
+    <div class="evo-tree">
+devstart/
+├── client.html
+└── styles/
+    ├── <span class="shared">base.css ← réutilisé</span>
+    ├── sections/
+    │   └── <span class="new">client-dashboard.css ← nouveau</span>
+    │   └── <span class="new">client-sidebar.css ← nouveau</span>
+    └── components/
+        └── <span class="shared">buttons.css ← réutilisé</span>
+    </div>
+    <div class="evo-note">L'espace client a une UI propre, mais les boutons et la base restent identiques.</div>
+  </div>
+
+  <div class="evo-card">
+    <div class="evo-title">📐 Règle générale d'extension</div>
+    <div class="evo-tree" style="color:#555; line-height: 2.2;">
+<span style="color:#4ade80">✓</span> Nouvelle page → nouveau dossier sections/
+<span style="color:#4ade80">✓</span> Nouveau composant → components/
+<span style="color:#4ade80">✓</span> base.css, buttons.css, cards.css
+  → toujours réutilisés, jamais modifiés
+<span style="color:var(--red)">✗</span> On ne touche jamais aux fichiers
+  des autres pages pour une nouvelle page
+    </div>
+    <div class="evo-note">Chaque nouvelle page est autonome et ne casse rien de ce qui existe.</div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     5. ORDRE D'IMPORT DANS index.html
+══════════════════════════════════════════ -->
+<div class="part-title">05 — Ordre d'import dans index.html</div>
+
+<div class="tree">
+  <div style="color: #444; font-size: 11px; margin-bottom: 12px;">/* Dans le &lt;head&gt; de index.html — l'ordre est important : global avant local */</div>
+
+  <div class="tree-line"><span style="color:#38bdf8">&lt;!-- 1. Fondations globales --&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file base">styles/base.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#444; margin-left: 8px;">↑ Chargé en premier : reset + variables de couleur</span></div>
+  <div class="tree-line">&nbsp;</div>
+  <div class="tree-line"><span style="color:#38bdf8">&lt;!-- 2. Composants réutilisables --&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file buttons">styles/components/buttons.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file cards">styles/components/cards.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#444; margin-left: 8px;">↑ Avant les sections car les sections s'appuient dessus</span></div>
+  <div class="tree-line">&nbsp;</div>
+  <div class="tree-line"><span style="color:#38bdf8">&lt;!-- 3. Sections dans l'ordre d'apparition --&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file header">styles/sections/header.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file hero">styles/sections/hero.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file services">styles/sections/services.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file about">styles/sections/about.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file testimonials">styles/sections/testimonials.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file contact">styles/sections/contact.css</span><span style="color:#ccc">"&gt;</span></div>
+  <div class="tree-line"><span style="color:#ccc">&lt;link rel="stylesheet" href="</span><span class="tree-file footer">styles/sections/footer.css</span><span style="color:#ccc">"&gt;</span></div>
+</div>
+
+<div class="summary-box">
+  <div class="sb-label">✓ Conclusion de la Phase 2</div>
+  <p>
+    L'architecture cible comprend <strong>10 fichiers CSS</strong> répartis en 3 niveaux de responsabilité : 
+    <strong>1 fichier global</strong> (base.css), <strong>7 fichiers de sections</strong> (1 par bloc de page), 
+    et <strong>2 fichiers de composants</strong> réutilisables (buttons.css, cards.css). 
+    Chaque fichier a une responsabilité unique et justifiée. Les futures pages (Portfolio, Blog, Espace Client) 
+    peuvent être ajoutées <strong>sans modifier un seul fichier existant</strong> — elles héritent des composants 
+    et créent uniquement ce qui leur est propre.
+  </p>
+</div>
+
+</body>
+</html>

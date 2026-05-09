@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Phase 1 — Cartographie du site DevStart</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --dark: #0f0f1a;
+    --navy: #1a1a2e;
+    --red: #e94560;
+    --light: #f4f4f4;
+    --grey: #888;
+    --white: #fff;
+    --border: #2a2a3e;
+    --tag-bg: #1e1e32;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 48px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+    margin-bottom: 44px;
+  }
+  .doc-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .doc-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .doc-title span { color: var(--red); }
+  .doc-sub {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--grey);
+    font-weight: 300;
+  }
+
+  /* ── SECTION TITLES ── */
+  .part-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .part-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 22px;
+    background: var(--navy);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--grey);
+    min-width: 24px;
+  }
+  .section-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    flex: 1;
+  }
+  .section-class {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: var(--dark);
+    color: var(--red);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .section-comment {
+    font-size: 12px;
+    color: var(--grey);
+    font-style: italic;
+  }
+
+  .section-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+  .section-col {
+    padding: 16px 22px;
+    border-right: 1px solid var(--border);
+  }
+  .section-col:last-child { border-right: none; }
+  .col-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 10px;
+  }
+  .col-label.affiche { color: #4ecdc4; }
+  .col-label.besoins { color: #ffd166; }
+  .col-label.css-file { color: #a78bfa; }
+
+  ul.items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  ul.items li {
+    font-size: 13px;
+    color: #ccc;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  ul.items li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--grey);
+    font-size: 11px;
+    top: 2px;
+  }
+  ul.items li.global::before { color: var(--red); content: '★'; }
+
+  /* ── CSS RULES TABLE ── */
+  .css-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+  .css-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--grey);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--navy);
+  }
+  .css-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: #ccc;
+  }
+  .css-table tr:last-child td { border-bottom: none; }
+  .css-table tr:hover td { background: #16162a; }
+
+  .selector {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--red);
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge.nav         { background: #1e3a5f; color: #60a5fa; }
+  .badge.hero        { background: #1e3a2e; color: #4ade80; }
+  .badge.services    { background: #3a1e2e; color: #f9a8d4; }
+  .badge.about       { background: #2e2a1e; color: #fcd34d; }
+  .badge.temoignages { background: #1e2a3a; color: #93c5fd; }
+  .badge.contact     { background: #2a1e1e; color: #fca5a5; }
+  .badge.footer      { background: #1e1e2a; color: #c4b5fd; }
+  .badge.global      { background: #2a1e2e; color: var(--red); }
+
+  .prop-list {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #888;
+    line-height: 1.8;
+  }
+
+  /* ── GLOBAL RULES BOX ── */
+  .global-box {
+    background: #1a0f1e;
+    border: 1px solid #3a1e3a;
+    border-left: 3px solid var(--red);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .global-box .box-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .global-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .global-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .global-item .gi-icon { font-size: 18px; margin-top: 1px; }
+  .global-item .gi-label { font-size: 13px; font-weight: 600; color: var(--white); }
+  .global-item .gi-value { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--grey); margin-top: 2px; }
+
+  /* ── VISUAL DIAGRAM ── */
+  .diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 40px;
+  }
+  .diag-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .diag-block {
+    border-radius: 8px;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .diag-block .db-name {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  .diag-block .db-class {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .diag-block .db-desc {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 4px;
+  }
+
+  .diag-nav        { background: #1a2744; border: 1px solid #2a3d6e; color: #93c5fd; flex: 1; }
+  .diag-hero       { background: #1a2e20; border: 1px solid #2a4e30; color: #4ade80; flex: 1; }
+  .diag-services   { background: #2e1a22; border: 1px solid #4e2a38; color: #f9a8d4; flex: 1; }
+  .diag-about      { background: #2e2a1a; border: 1px solid #4e461a; color: #fcd34d; flex: 1; }
+  .diag-temoignages{ background: #1a2030; border: 1px solid #2a3050; color: #a5b4fc; flex: 1; }
+  .diag-contact    { background: #2e1a1a; border: 1px solid #4e2a2a; color: #fca5a5; flex: 1; }
+  .diag-footer     { background: #1a1a2a; border: 1px solid #2a2a4a; color: #c4b5fd; flex: 1; }
+
+  .space { height: 40px; }
+  .mt { margin-top: 40px; }
+
+  /* ── REUSABLE ELEMENTS ── */
+  .reusable-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .reusable-card {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .reusable-card .rc-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--white);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .reusable-card .rc-title .dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  .reusable-card .rc-selectors {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .reusable-card .rc-desc {
+    font-size: 12px;
+    color: var(--grey);
+    line-height: 1.5;
+  }
+
+  /* print helper */
+  @media print {
+    body { background: white; color: black; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-label">Bloc 2 · Module 2 — Phase 1</div>
+  <div class="doc-title">Cartographie du site <span>DevStart Agency</span></div>
+  <div class="doc-sub">Analyse complète de la structure HTML · Inventaire CSS · Éléments réutilisables · IFRI L1</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     1. SCHÉMA VISUEL DE LA PAGE
+════════════════════════════════════════════════ -->
+<div class="part-title">01 — Schéma visuel de la structure actuelle</div>
+
+<div class="diagram">
+  <div class="diag-row">
+    <div class="diag-block diag-nav">
+      <div class="db-name">🧭 Navigation</div>
+      <div class="db-class">.b1 / .b1a / .b1b</div>
+      <div class="db-desc">Logo + liens de navigation</div>
+    </div>
+  </div>
+  <div class="diag-row">
+    <div class="diag-block diag-hero">
+      <div class="db-name">🚀 Hero</div>
+      <div class="db-class">.c / .c1 / .c2</div>
+      <div class="db-desc">Accroche principale + image + CTA</div>
+    </div>
+  </div>
+  <div class="diag-row">
+    <div class="diag-block diag-services">
+      <div class="db-name">🛠 Services</div>
+      <div class="db-class">.d / .dd / .d1–.d4</div>
+      <div class="db-desc">4 cartes de services (Design, Dev, Marketing, Maintenance)</div>
+    </div>
+  </div>
+  <div class="diag-row">
+    <div class="diag-block diag-about">
+      <div class="db-name">👥 À propos</div>
+      <div class="db-class">.e / .e1 / .e2</div>
+      <div class="db-desc">Photo équipe + texte présentation + CTA</div>
+    </div>
+  </div>
+  <div class="diag-row">
+    <div class="diag-block diag-temoignages">
+      <div class="db-name">💬 Témoignages</div>
+      <div class="db-class">.f / .ff / .f1–.f3</div>
+      <div class="db-desc">3 citations clients sur fond sombre</div>
+    </div>
+  </div>
+  <div class="diag-row">
+    <div class="diag-block diag-contact">
+      <div class="db-name">✉️ Contact</div>
+      <div class="db-class">.g / .gf / .gi / .gt / .gb</div>
+      <div class="db-desc">Formulaire : nom, email, sujet, message, bouton envoi</div>
+    </div>
+  </div>
+  <div class="diag-row">
+    <div class="diag-block diag-footer">
+      <div class="db-name">🔻 Footer</div>
+      <div class="db-class">.h / .h1 / .h2 / .h3</div>
+      <div class="db-desc">Copyright + liens sociaux + email contact</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     2. ANALYSE SECTION PAR SECTION
+════════════════════════════════════════════════ -->
+<div class="part-title mt">02 — Analyse de chaque section</div>
+
+<!-- NAV -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S1</span>
+    <span class="section-name">Navigation / Header</span>
+    <span class="section-class">.b1</span>
+    <span class="section-comment">/* ---- nav ---- */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Logo textuel "DevStart"</li>
+        <li>4 liens de navigation (acc, nous, serv, cont)</li>
+        <li>Barre horizontale fixe en haut de page</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>Texte du logo (hardcodé)</li>
+        <li>Textes des 4 liens</li>
+        <li>Ancres de navigation (#)</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>header.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S2</span>
+    <span class="section-name">Hero</span>
+    <span class="section-class">.c</span>
+    <span class="section-comment">/* hero */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Titre accroche principal</li>
+        <li>Sous-titre descriptif</li>
+        <li>Bouton CTA "Commencer"</li>
+        <li>Image illustrative (hero.png)</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>Image : hero.png</li>
+        <li>Texte du titre et du sous-titre</li>
+        <li>Lien du bouton (#)</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>hero.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S3</span>
+    <span class="section-name">Services</span>
+    <span class="section-class">.d</span>
+    <span class="section-comment">/* services */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Titre de section "Ce qu'on fait"</li>
+        <li>4 cartes : Design, Développement, Marketing, Maintenance</li>
+        <li>Chaque carte : icône emoji + titre + description</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>4 icônes emoji (🎨💻📈🔧)</li>
+        <li>4 titres + 4 textes descriptifs</li>
+        <li>Aucune image externe</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>services.css</li>
+        <li>→ cartes réutilisables → cards.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S4</span>
+    <span class="section-name">À propos</span>
+    <span class="section-class">.e</span>
+    <span class="section-comment">/* about */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Photo de l'équipe</li>
+        <li>Titre "À propos de nous"</li>
+        <li>2 paragraphes de présentation</li>
+        <li>Bouton CTA "Notre histoire"</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>Image : team.png</li>
+        <li>Textes des 2 paragraphes</li>
+        <li>Lien du bouton (#)</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>about.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TEMOIGNAGES -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S5</span>
+    <span class="section-name">Témoignages</span>
+    <span class="section-class">.f</span>
+    <span class="section-comment">/* temoignages */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Titre "Ils nous font confiance"</li>
+        <li>3 cartes de citation (quote + nom + entreprise)</li>
+        <li>Fond sombre avec accent rouge</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>3 textes de témoignage</li>
+        <li>3 noms et entreprises</li>
+        <li>Aucune image externe</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>testimonials.css</li>
+        <li>→ cartes réutilisables → cards.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S6</span>
+    <span class="section-name">Contact</span>
+    <span class="section-class">.g</span>
+    <span class="section-comment">/* contact */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Titre "Contactez-nous"</li>
+        <li>3 champs input (nom, email, sujet)</li>
+        <li>1 textarea (message)</li>
+        <li>Bouton "Envoyer"</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>Placeholders des champs</li>
+        <li>Aucune image externe</li>
+        <li>Action du formulaire (# pour l'instant)</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>contact.css</li>
+        <li>→ bouton réutilisable → buttons.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="section-card">
+  <div class="section-header">
+    <span class="section-num">S7</span>
+    <span class="section-name">Footer</span>
+    <span class="section-class">.h</span>
+    <span class="section-comment">/* footer */</span>
+  </div>
+  <div class="section-body">
+    <div class="section-col">
+      <div class="col-label affiche">Ce qu'elle affiche</div>
+      <ul class="items">
+        <li>Copyright "DevStart Agency © 2024"</li>
+        <li>3 liens réseaux sociaux (Facebook, Instagram, LinkedIn)</li>
+        <li>Email de contact</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label besoins">Ce dont elle a besoin</div>
+      <ul class="items">
+        <li>Texte du copyright</li>
+        <li>3 liens sociaux (#)</li>
+        <li>Adresse email (contact@devstart.bj)</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label css-file">Fichier CSS cible</div>
+      <ul class="items">
+        <li>footer.css</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     3. RÈGLES CSS GLOBALES → base.css
+════════════════════════════════════════════════ -->
+<div class="part-title mt">03 — Règles CSS globales → base.css</div>
+
+<div class="global-box">
+  <div class="box-title">★ Ces règles s'appliquent à tout le site — elles iront dans base.css</div>
+  <div class="global-items">
+    <div class="global-item">
+      <div class="gi-icon">🔄</div>
+      <div>
+        <div class="gi-label">Reset universel</div>
+        <div class="gi-value">* { margin: 0; padding: 0; }</div>
+      </div>
+    </div>
+    <div class="global-item">
+      <div class="gi-icon">🖋</div>
+      <div>
+        <div class="gi-label">Typographie globale</div>
+        <div class="gi-value">font-family: Arial · color: #333</div>
+      </div>
+    </div>
+    <div class="global-item">
+      <div class="gi-icon">🎨</div>
+      <div>
+        <div class="gi-label">Couleur principale</div>
+        <div class="gi-value">#1a1a2e (navy) — utilisée dans 5 sections</div>
+      </div>
+    </div>
+    <div class="global-item">
+      <div class="gi-icon">❤️</div>
+      <div>
+        <div class="gi-label">Couleur accent</div>
+        <div class="gi-value">#e94560 (rouge) — utilisée dans 4 sections</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     4. INVENTAIRE COMPLET DES RÈGLES CSS
+════════════════════════════════════════════════ -->
+<div class="part-title">04 — Inventaire complet des règles CSS</div>
+
+<table class="css-table">
+  <thead>
+    <tr>
+      <th>Sélecteur(s)</th>
+      <th>Section</th>
+      <th>Propriétés clés</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- GLOBAL -->
+    <tr>
+      <td><span class="selector">*, body</span></td>
+      <td><span class="badge global">base.css</span></td>
+      <td class="prop-list">margin, padding, font-family, color</td>
+    </tr>
+    <!-- NAV -->
+    <tr>
+      <td><span class="selector">.b1</span></td>
+      <td><span class="badge nav">header.css</span></td>
+      <td class="prop-list">background, padding, display:flex, justify-content, align-items</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.b1a</span></td>
+      <td><span class="badge nav">header.css</span></td>
+      <td class="prop-list">color, font-size, font-weight</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.b1b a, .b1b a:hover</span></td>
+      <td><span class="badge nav">header.css</span></td>
+      <td class="prop-list">color, text-decoration, margin-left, font-size</td>
+    </tr>
+    <!-- HERO -->
+    <tr>
+      <td><span class="selector">.c</span></td>
+      <td><span class="badge hero">hero.css</span></td>
+      <td class="prop-list">display:flex, padding, background, gap, align-items</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.c1, .c1a, .c1b</span></td>
+      <td><span class="badge hero">hero.css</span></td>
+      <td class="prop-list">flex, font-size, font-weight, color, line-height, margin-bottom</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.c1c a</span></td>
+      <td><span class="badge hero">hero.css</span></td>
+      <td class="prop-list">background:#e94560, color, padding, border-radius, font-weight</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.c2 img</span></td>
+      <td><span class="badge hero">hero.css</span></td>
+      <td class="prop-list">width, max-width, border-radius</td>
+    </tr>
+    <!-- SERVICES -->
+    <tr>
+      <td><span class="selector">.d, .d0</span></td>
+      <td><span class="badge services">services.css</span></td>
+      <td class="prop-list">padding, background, font-size, font-weight, text-align, margin-bottom</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.dd</span></td>
+      <td><span class="badge services">services.css</span></td>
+      <td class="prop-list">display:flex, gap</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.d1, .d2, .d3, .d4</span></td>
+      <td><span class="badge services">services.css</span></td>
+      <td class="prop-list">flex, background:#f4f4f4, padding, border-radius, text-align</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.d1i–.d4i / .d1t–.d4t / .d1p–.d4p</span></td>
+      <td><span class="badge services">services.css</span></td>
+      <td class="prop-list">font-size, font-weight, color, margin-bottom, line-height</td>
+    </tr>
+    <!-- ABOUT -->
+    <tr>
+      <td><span class="selector">.e, .e1, .e2</span></td>
+      <td><span class="badge about">about.css</span></td>
+      <td class="prop-list">display:flex, padding, background:#f0f0f5, gap, align-items, flex</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.eimg</span></td>
+      <td><span class="badge about">about.css</span></td>
+      <td class="prop-list">width, border-radius</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.e2t, .e2p, .e2b a</span></td>
+      <td><span class="badge about">about.css</span></td>
+      <td class="prop-list">font-size, font-weight, color, margin-bottom, line-height, padding, border-radius</td>
+    </tr>
+    <!-- TEMOIGNAGES -->
+    <tr>
+      <td><span class="selector">.f, .f0</span></td>
+      <td><span class="badge temoignages">testimonials.css</span></td>
+      <td class="prop-list">padding, background:#1a1a2e, font-size, color:white, text-align</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.ff</span></td>
+      <td><span class="badge temoignages">testimonials.css</span></td>
+      <td class="prop-list">display:flex, gap</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.f1, .f2, .f3</span></td>
+      <td><span class="badge temoignages">testimonials.css</span></td>
+      <td class="prop-list">flex, background:#16213e, padding, border-radius, border-left:#e94560</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.f1t–.f3t / .f1n–.f3n</span></td>
+      <td><span class="badge temoignages">testimonials.css</span></td>
+      <td class="prop-list">font-size, color:#ccc, line-height, font-style:italic, margin-bottom</td>
+    </tr>
+    <!-- CONTACT -->
+    <tr>
+      <td><span class="selector">.g, .g0, .gf</span></td>
+      <td><span class="badge contact">contact.css</span></td>
+      <td class="prop-list">padding, background:#f9f9f9, font-size, text-align, max-width, display:flex</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.gi, .gt</span></td>
+      <td><span class="badge contact">contact.css</span></td>
+      <td class="prop-list">padding, border, border-radius, font-size, outline:none, height (textarea)</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.gb, .gb:hover</span></td>
+      <td><span class="badge contact">contact.css</span></td>
+      <td class="prop-list">background:#e94560, color:white, border:none, padding, border-radius, cursor</td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+      <td><span class="selector">.h</span></td>
+      <td><span class="badge footer">footer.css</span></td>
+      <td class="prop-list">background:#0f0f1a, padding, display:flex, justify-content, align-items</td>
+    </tr>
+    <tr>
+      <td><span class="selector">.h1, .h2 a, .h2 a:hover, .h3</span></td>
+      <td><span class="badge footer">footer.css</span></td>
+      <td class="prop-list">color:#aaa, font-size, text-decoration, margin-left</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- ══════════════════════════════════════════════
+     5. ÉLÉMENTS RÉUTILISABLES
+════════════════════════════════════════════════ -->
+<div class="part-title">05 — Éléments réutilisables identifiés</div>
+
+<div class="reusable-grid">
+  <div class="reusable-card">
+    <div class="rc-title"><div class="dot"></div>Boutons CTA</div>
+    <div class="rc-selectors">.c1c a · .e2b a · .gb</div>
+    <div class="rc-desc">3 boutons sur le site avec le même style de base (fond coloré, border-radius, padding, font-weight bold). Ils méritent un fichier <strong>buttons.css</strong> commun.</div>
+  </div>
+  <div class="reusable-card">
+    <div class="rc-title"><div class="dot"></div>Cartes de contenu</div>
+    <div class="rc-selectors">.d1–.d4 · .f1–.f3</div>
+    <div class="rc-desc">Les cartes de services et les cartes de témoignages partagent la même structure (flex:1, padding, border-radius, background). Un fichier <strong>cards.css</strong> peut regrouper ces patterns.</div>
+  </div>
+  <div class="reusable-card">
+    <div class="rc-title"><div class="dot"></div>Titres de section</div>
+    <div class="rc-selectors">.d0 · .f0 · .g0 · .e2t</div>
+    <div class="rc-desc">Tous les titres de section partagent font-size: 28px, font-weight: bold, color: #1a1a2e (ou white). Potentiellement un style de classe utilitaire dans <strong>base.css</strong>.</div>
+  </div>
+  <div class="reusable-card">
+    <div class="rc-title"><div class="dot"></div>Layouts flex 2 colonnes</div>
+    <div class="rc-selectors">.c · .e · .h</div>
+    <div class="rc-desc">3 sections utilisent display:flex avec justify-content:space-between ou gap. Ce pattern de mise en page est répété et pourrait être abstrait dans un futur <strong>layout.css</strong>.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     6. SYNTHÈSE / PROBLÈMES IDENTIFIÉS
+════════════════════════════════════════════════ -->
+<div class="part-title">06 — Problèmes identifiés dans le code du stagiaire</div>
+
+<div class="section-card" style="margin-bottom:0">
+  <div class="section-body" style="grid-template-columns: 1fr 1fr;">
+    <div class="section-col">
+      <div class="col-label" style="color:#fca5a5">⚠ Problèmes de nommage</div>
+      <ul class="items">
+        <li>Classes sans signification sémantique : .b1, .c, .d, .e, .f, .g, .h</li>
+        <li>Impossible de deviner la section depuis le nom de classe</li>
+        <li>Un nouveau développeur doit lire tout le HTML pour comprendre</li>
+        <li>Les commentaires HTML compensent les mauvais noms</li>
+      </ul>
+    </div>
+    <div class="section-col">
+      <div class="col-label" style="color:#fca5a5">⚠ Problèmes d'architecture</div>
+      <ul class="items">
+        <li>1 seul fichier style.css pour 7 sections + styles globaux</li>
+        <li>Les couleurs #1a1a2e et #e94560 sont dupliquées 9+ fois</li>
+        <li>Aucune variable CSS (--color-primary, etc.)</li>
+        <li>Éléments réutilisables (boutons, cartes) non abstraits</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 40px; padding: 18px 24px; background: #0f1a0f; border: 1px solid #1e3a1e; border-left: 3px solid #4ade80; border-radius: 8px;">
+  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #4ade80; margin-bottom: 8px;">✓ Conclusion de la Phase 1</div>
+  <div style="font-size: 13px; color: #aaa; line-height: 1.8;">
+    Le site DevStart contient <strong style="color:white">7 sections</strong> bien délimitées, <strong style="color:white">1 fichier CSS de 230+ lignes</strong> couvrant tout sans séparation de responsabilités, et <strong style="color:white">4 types d'éléments réutilisables</strong> non mutualisés. La cartographie est complète et fournit toute la base nécessaire pour concevoir l'architecture modulaire en Phase 2.
+  </div>
+</div>
+
+</body>
+</html>

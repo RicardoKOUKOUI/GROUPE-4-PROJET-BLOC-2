@@ -1,0 +1,23 @@
+/* ============================================
+   components/cards.css
+   Responsabilité : Styles visuels des cartes réutilisables
+   Utilisé par : services, testimonials
+   ============================================ */
+
+/* Cartes de services */
+.d1, .d2, .d3, .d4 {
+  flex: 1;
+  background: #f4f4f4;
+  padding: 28px 22px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Cartes de témoignages */
+.f1, .f2, .f3 {
+  flex: 1;
+  background: #16213e;
+  padding: 28px;
+  border-radius: 10px;
+  border-left: 4px solid #e94560;
+}

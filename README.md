@@ -30,19 +30,23 @@ Objectif : convaincre en moins de 10 secondes.
 ## Structure du projet
 
 nexalab/
+│
 ├── index.html
+│
 ├── styles/
-│   ├── base.css          ← reset, variables CSS, typographie globale
-│   ├── header.css        ← barre de navigation, logo, liens
-│   ├── hero.css          ← section accroche, titre, bouton CTA
-│   ├── about.css         ← section à propos, mission, vision
-│   ├── services.css      ← 3 cartes services avec icônes
-│   ├── stats.css         ← chiffres clés, compteurs
-│   ├── team.css          ← cartes équipe, photos, postes
-│   ├── testimonials.css  ← 3 témoignages clients
-│   ├── contact.css       ← formulaire de contact stylisé
-│   └── footer.css        ← pied de page, réseaux sociaux
+│   ├── base.css
+│   ├── header.css
+│   ├── hero.css
+│   ├── about.css
+│   ├── services.css
+│   ├── stats.css
+│   ├── team.css
+│   ├── testimonials.css
+│   ├── contact.css
+│   └── footer.css
+│
 ├── assets/
-│   ├── images/           ← photos libres de droits (Unsplash/Pexels)
-│   └── icons/            ← icônes SVG des services
+│   ├── images/
+│   └── icons/
+│
 └── README.md

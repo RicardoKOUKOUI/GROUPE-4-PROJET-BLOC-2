@@ -1,0 +1,172 @@
+/* ======================
+   BASE — NexaLab
+   Variables, reset, typo
+   ====================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  /* Navy Mirage Palette */
+  --bg-deep:       #0D1621;
+  --bg-primary:    #141E30;
+  --bg-card:       #1C2A3E;
+  --bg-card-hover: #223248;
+  --bg-surface:    #253549;
+  --accent-mid:    #35577D;
+  --accent-blue:   #6EAEE7;
+  --accent-light:  #8DC5F0;
+  --accent-bright: #A8D5F5;
+  --text-primary:  #D4E4F7;
+  --text-muted:    rgba(212, 228, 247, 0.45);
+  --text-faint:    rgba(212, 228, 247, 0.2);
+  --border:        rgba(53, 87, 125, 0.45);
+  --border-accent: rgba(110, 174, 231, 0.3);
+  --success:       #5CC8A0;
+
+  /* Typography */
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Spacing */
+  --section-pad: 80px 60px;
+  --card-radius: 14px;
+  --btn-radius:  8px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  /* Empêche le débordement horizontal sur mobile */
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Utility */
+.container {
+  max-width: 1160px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.section-tag {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.section-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.section-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 480px;
+  line-height: 1.75;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-mid);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: var(--btn-radius);
+  border: 0.5px solid var(--accent-blue);
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: var(--bg-surface);
+  border-color: var(--accent-light);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: rgba(212, 228, 247, 0.6);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: var(--btn-radius);
+  border: 0.5px solid rgba(212, 228, 247, 0.2);
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-ghost:hover {
+  border-color: rgba(212, 228, 247, 0.4);
+  color: var(--text-primary);
+}
+
+.divider {
+  height: 0.5px;
+  background: var(--border);
+  border: none;
+}

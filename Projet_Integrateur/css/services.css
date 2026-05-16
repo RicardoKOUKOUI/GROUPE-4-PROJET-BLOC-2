@@ -1,0 +1,129 @@
+/* ======================
+   SERVICES / EXPERTISES
+   ====================== */
+
+.services {
+  padding: 80px 0;
+}
+
+.services-header {
+  margin-bottom: 48px;
+}
+
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.service-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 28px 24px;
+  flex: 1 1 calc(33.33% - 12px);
+  min-width: 240px;
+  transition: border-color 0.25s, background 0.25s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-mid);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.service-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Icône : cadre carré, image centrée, rien ne déborde */
+.service-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(53, 87, 125, 0.35);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.service-icon img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  /* Teinte bleue pour harmoniser avec le thème */
+  filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(190deg) brightness(1.1);
+}
+
+.service-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.service-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.service-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.service-tag {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  background: rgba(110, 174, 231, 0.1);
+  padding: 3px 9px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+  border: 0.5px solid rgba(110, 174, 231, 0.2);
+}
+
+/* Tablet : 2 colonnes */
+@media (max-width: 1024px) {
+  .service-card {
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+
+/* Mobile : 1 colonne */
+@media (max-width: 600px) {
+  .services-grid {
+    flex-direction: column;
+  }
+  .service-card {
+    flex: none;
+    width: 100%;
+  }
+}

@@ -76,11 +76,11 @@ nexalab/
 ### Palette de couleurs
 ```css
 :root {
-  --color-bg: #0a0a0f;         /* fond principal — noir profond */
+  --color-bg: #0a0a0f;         /* fond principal — navy blue */
   --color-surface: #13131a;    /* fond des cartes et sections */
-  --color-accent: #7c3aed;     /* violet — couleur d'accentuation */
+  --color-accent: #7c3aed;     /* bleu clair — couleur d'accentuation */
   --color-text: #ffffff;       /* texte principal — blanc */
-  --color-text-secondary: #aaaaaa; /* texte secondaire — gris clair */
+  --color-text-secondary: #aaaaaa; /* texte secondaire — bleu */
   --color-border: #1e1e2e;     /* bordures subtiles */
 }
 ```
